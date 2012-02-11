@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
 
 # variables
-DBNAME='db_devel'
+dbName='db_devel'
 
 # jump into the drupal root
 cd /var/www/html
 
 # look to see if the database is installed yet
-RESULT="mysqlshow --user=root $DBNAME | grep -v Wildcard | grep -o $DBNAME"
+result=`mysqlshow --user=root $dbName | grep -v Wildcard | grep -o $dbName`
 
-if [ "$RESULT" == "$DBNAME" ]
+if [ "$result" == $dbName ]
   # if it's already installed, just indicate such
   then
     echo 'Database already installed.'
 
   # if it's not installed, install it using the daptive_dma profile
   else
-    echo "Database $DBNAME not yet installed... installing using mysql"
+    echo "$result - $dbName"
+    echo "Database $dbName not yet installed... installing using mysql"
 
-    # create database
-    mysql -u root -e "CREATE DATABASE IF NOT EXISTS $DBNAME;"
+    mysql -u root -e "CREATE DATABASE IF NOT EXISTS $dbName;"
+    # mysql $dbName -u root < /vagrant/data/db/backup_migrate/backup.mysql
 
     # not using drush anymore for this
-    echo "Database $DBNAME should be installed, drop then run this script again to reinstall."
+    echo "Database $dbName should be installed, drop then run this script again to reinstall."
 fi
